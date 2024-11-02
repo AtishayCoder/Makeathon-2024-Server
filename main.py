@@ -20,8 +20,8 @@ def process_recording():
         recognizer = Recognizer()
         translator = Translator()
         text_of_audio = recognizer.recognize_amazon(audio_file)
-        text_for_audio = translator.translate(text_of_audio, "en")
-        nlptk.do_stuff()
+        text_of_audio = translator.translate(text_of_audio, "en")
+        nlptk.do_stuff(text_of_audio)
 
     except Exception as error:
         print(error)

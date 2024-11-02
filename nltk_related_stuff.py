@@ -1,11 +1,10 @@
-from nltk import *
-from main import process_recording
+import microbiology as m
 
 
-def do_stuff():
+def do_stuff(text):
     r = ortho()
     if r is None:
-        r1 = micro()
+        r1 = m.micro(text)
         if r1 is None:
             r2 = derma()
             if r2 is None:
@@ -19,10 +18,6 @@ def do_stuff():
 
 
 def ortho():
-    pass
-
-
-def micro():
     pass
 
 
