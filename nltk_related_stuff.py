@@ -10,13 +10,12 @@ nltk.download('words')
 
 
 def do_stuff(text):
-    time = process(text)
-    r = ortho()
+    time, pos_tag_list = process(text)
+    r = ortho(time)
     if r is None:
-        time = process(text)
-        m.micro(r1)
+        r1 = m.micro(time, pos_tag_list)
         if r1 is None:
-            r2 = derma()
+            r2 = derma(time)
             if r2 is None:
                 return "Unsupported"
             else:
@@ -24,14 +23,14 @@ def do_stuff(text):
         else:
             return str(r1)
     else:
-        return r
+        return str(r)
 
 
-def ortho():
+def ortho(time):
     pass
 
 
-def derma():
+def derma(time):
     pass
 
 
@@ -47,7 +46,7 @@ def process(text_):
     # Part of Speech (POS) Tagging
     pos_tags = pos_tag(filtered_words)
     print("POS Tags:", pos_tags)
-    calculate_time(pos_tags)
+    return calculate_time(pos_tags), pos_tags
 
     # Optional Stuff if needed later
 
@@ -150,5 +149,8 @@ def calculate_time(pos_list):
                     break
 
         index += 1
-    print(time)
-    return time
+    if time is not None:
+        print(time)
+        return time
+    else:
+        return "No Time Given"

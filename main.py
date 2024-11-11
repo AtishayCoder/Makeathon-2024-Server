@@ -8,7 +8,9 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def main():
-    process_recording()
+    result = process_recording()
+    if result == "No Time Given":
+        return "ask/ time"
 
 def process_recording():
     audio_file = None
@@ -21,7 +23,7 @@ def process_recording():
         translator = Translator()
         text_of_audio = recognizer.recognize_amazon(audio_file)
         text_of_audio = translator.translate(text_of_audio, "en")
-        nlptk.do_stuff(text_of_audio)
+        return nlptk.do_stuff(text_of_audio)
 
     except Exception as error:
         print(error)
