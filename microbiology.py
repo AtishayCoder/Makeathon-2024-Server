@@ -1,5 +1,6 @@
 def micro(time, pos_list):
     for i in pos_list:
+        # Fever
         if str(i[0]).lower() == "fever" or str(i[0]).lower() == "temperature":
             if (str(list(time)[-1]).lower() == "m" or str(list(time)[-1]).lower() == "y" or str(
                     list(time)[-1]).lower() == "w") or (int(list(time)[0]) > 7 and str(list(time)[-1]).lower() == "d"):
@@ -53,3 +54,16 @@ def micro(time, pos_list):
                         for f in pos_list:
                             if f[0].lower() == "area" or f[0].lower() == "certain" or f[0].lower() == "one" or f[0].lower() == "place":
                                 return "result/The diagnosis is Bacterial Infection."
+        # Respiratory
+        elif str(i[0]).lower() == "cough" or str(i[0]).lower() == "coughing":
+            for g in pos_list:
+                # Pneumonia (Productive cough)
+                if g[0].lower() == "mucus" or g[0].lower() == "liquid":
+                    for h in pos_list:
+                        if h[0].lower() == "chest":
+                            for _ in pos_list:
+                                if _[0].lower() == "pain":
+                                    return "result/The diagnosis is Pneumonia."
+                # Dry cough
+                elif g[0].lower() == "dried" or g[0].lower() == "dry":
+                    pass
