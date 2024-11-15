@@ -66,4 +66,13 @@ def micro(time, pos_list):
                                     return "result/The diagnosis is Pneumonia."
                 # Dry cough
                 elif g[0].lower() == "dried" or g[0].lower() == "dry":
-                    pass
+                    for h in pos_list:
+                        # Asthma
+                        if h[0].lower() == "chest":
+                            for j in pos_list:
+                                if j[0].lower() == "tightness" or "tight" or "pressure" or "ripping" or "rip":
+                                    return "result/The diagnosis is Asthma."
+                        elif h[0].lower() == "breath" or "gasp":
+                            for k in pos_list:
+                                if k[0].lower() == "shortness" or "problem" or "difficulty" or "difficult":
+                                    return "result/The diagnosis is Bronchitis."
