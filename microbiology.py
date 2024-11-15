@@ -1,13 +1,15 @@
 def micro(time, pos_list):
     for i in pos_list:
         if str(i[0]).lower() == "fever" or str(i[0]).lower() == "temperature":
-            if (str(list(time)[-1]).lower() == "m" or str(list(time)[-1]).lower() == "y" or str(list(time)[-1]).lower() == "w") or (int(list(time)[0]) > 7 and str(list(time)[-1]).lower() == "d"):
+            if (str(list(time)[-1]).lower() == "m" or str(list(time)[-1]).lower() == "y" or str(
+                    list(time)[-1]).lower() == "w") or (int(list(time)[0]) > 7 and str(list(time)[-1]).lower() == "d"):
                 # Chronic disease
                 for _ in pos_list:
                     # HIV
                     if _[0].lower() == "swelling":
                         for a in pos_list:
-                            if a[0].lower() == "shoulder" or a[0].lower() == "hips" or a[0].lower() == "butt" or a[0].lower() == "buttocks" or a[0].lower() == "neck" or a[0].lower() == "chest":
+                            if a[0].lower() == "shoulder" or a[0].lower() == "hips" or a[0].lower() == "butt" or a[
+                                0].lower() == "buttocks" or a[0].lower() == "neck" or a[0].lower() == "chest":
                                 return "result/The diagnosis is HIV."
                     # Tuberculosis
                     elif _[0].lower() == "night":
@@ -27,14 +29,19 @@ def micro(time, pos_list):
 
             elif int(list(time)[0]) <= 7 and str(list(time)[-1]).lower() == "d":
                 # Acute disease
-                for _ in pos_list:
-                    if _[0].lower() == "high":
-                        for b in pos_list:
-                            # Malaria
-                            if b[0].lower() == "cold" or b[0].lower() == "cool" or b[0].lower() == "chills" or b[0].lower() == "chill":return "result/The diagnosis is Malaria."
-                            # Typhoid
-                            elif b[0].lower() == "hunger" or b[0].lower() == "stomach" or b[0].lower() == "eating" or b[0].lower() == "eat" or b[0].lower() == "food":
-                                for c in pos_list:
-                                    if c[0].lower() == "no" or c[0].lower() == "less" or c[0].lower() == "full" or c[0].lower() == "feel":
-                                        return "result/The result is Typhoid."
-
+                for b in pos_list:
+                    # Malaria
+                    if b[0].lower() == "cold" or b[0].lower() == "cool" or b[0].lower() == "chills" or b[0].lower() == "chill":return "result/The diagnosis is Malaria."
+                    # Typhoid
+                    elif b[0].lower() == "hunger" or b[0].lower() == "stomach" or b[0].lower() == "eating" or b[0].lower() == "eat" or b[0].lower() == "food":
+                        for c in pos_list:
+                            if c[0].lower() == "no" or c[0].lower() == "less" or c[0].lower() == "full" or c[0].lower() == "feel":
+                                return "result/The result is Typhoid."
+                    # Dengue
+                    elif b[0].lower() == "nose":
+                        for d in pos_list:
+                            if d[0].lower() == "bleeding" or d[0].lower() == "bleed" or d[0].lower() == "bleeds" or d[
+                                0].lower() == "blood":
+                                return "result/The diagnosis is Dengue."
+                    # Viral infection
+                    elif b[0].lower() == ""
