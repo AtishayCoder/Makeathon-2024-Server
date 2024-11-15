@@ -44,4 +44,7 @@ def micro(time, pos_list):
                                 0].lower() == "blood":
                                 return "result/The diagnosis is Dengue."
                     # Viral infection
-                    elif b[0].lower() == ""
+                    elif b[0].lower() == "cough" or b[0].lower() == "nose":
+                        for e in pos_list:
+                            if e[0].lower() == "running" or e[0].lower() == "runny" or e[0].lower() == "mucus":
+                                return "result/The diagnosis is Viral Infection."
