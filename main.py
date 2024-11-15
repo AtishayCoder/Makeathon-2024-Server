@@ -2,6 +2,7 @@ from speech_recognition import *
 from googletrans import *
 from flask import *
 import nltk_related_stuff as nlptk
+from moviepy.editor import concatenate_audioclips, AudioFileClip
 
 app = Flask(__name__)
 
@@ -21,13 +22,20 @@ def main():
     return process_recording()
 
 
+def combine_audios():
+    audio_clip_paths = ["audios/audio.wav", "audios/received_audio.wav"]
+    clips = [AudioFileClip(c) for c in audio_clip_paths]
+    final_clip = concatenate_audioclips(clips)
+    final_clip.write_audiofile("audios/audio.wav")
+
+
 def process_recording():
-    audio_file = None
     if request.method == "POST":
         audio_file = request.data
-        with open("received_audio.wav", mode="wb") as f:
+        with open("audios/received_audio.wav", mode="wb") as f:
             f.write(audio_file)
     try:
+        audio_file = open("audios/audio.wav").read()
         recognizer = Recognizer()
         translator = Translator()
         text_of_audio = recognizer.recognize_amazon(audio_file)
