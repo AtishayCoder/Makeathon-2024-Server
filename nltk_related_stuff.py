@@ -153,4 +153,4 @@ def calculate_time(pos_list):
         print(time)
         return time
     else:
-        return "No Time Given"
+        return "ask/For how much time do you have this problem?"

@@ -5,12 +5,21 @@ import nltk_related_stuff as nlptk
 
 app = Flask(__name__)
 
+"""
+Plan for two way communication.
+
+I will enter the message to be displayed in the else statements and start it with 'ask/{question}'.
+Then I just return it. Then on the client's side, I check if the string starts with ask. 
+If so, it will display the question and prompt the user to enter that data. 
+If the processing was complete, it will start the string with 'result/'. 
+If that is prefix, then the server will display just that and the server will clean the thing and start afresh.
+"""
+
 
 @app.route("/", methods=["POST"])
 def main():
-    result = process_recording()
-    if result == "No Time Given":
-        return "ask/ time"
+    return process_recording()
+
 
 def process_recording():
     audio_file = None
@@ -30,4 +39,4 @@ def process_recording():
 
 
 if __name__ == "__main__":
-    app.run("8000")
+    app.run("5000")
