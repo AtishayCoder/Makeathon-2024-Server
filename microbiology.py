@@ -48,3 +48,8 @@ def micro(time, pos_list):
                         for e in pos_list:
                             if e[0].lower() == "running" or e[0].lower() == "runny" or e[0].lower() == "mucus":
                                 return "result/The diagnosis is Viral Infection."
+                    # Bacterial infection
+                    elif b[0].lower() == "pain":
+                        for f in pos_list:
+                            if f[0].lower() == "area" or f[0].lower() == "certain" or f[0].lower() == "one" or f[0].lower() == "place":
+                                return "result/The diagnosis is Bacterial Infection."
