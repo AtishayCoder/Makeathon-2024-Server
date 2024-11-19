@@ -1,37 +1,24 @@
-import microbiology as m
 import nltk
+# noinspection PyUnresolvedReferences
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
+# noinspection PyUnresolvedReferences
 from nltk import pos_tag, ne_chunk
+# noinspection PyUnresolvedReferences
 from nltk.chunk import RegexpParser
+import requests as r
+from requests import session
 
 # Downloading resources
 nltk.download('words')
+ENDPOINT = "https://api.endlessmedical.com/v1/"
 
 
 def do_stuff(text):
     time, pos_tag_list = process(text)
-    r = ortho(time)
-    if r is None:
-        r1 = m.micro(time, pos_tag_list)
-        if r1 is None:
-            r2 = derma(time)
-            if r2 is None:
-                return "Unsupported"
-            else:
-                return str(r2)
-        else:
-            return str(r1)
-    else:
-        return str(r)
-
-
-def ortho(time):
-    pass
-
-
-def derma(time):
-    pass
+    session1 = r.get(f"{ENDPOINT}dx/InitSession")
+    if session1.status_code == 200:
+        session1 = session1.json().SessionID
 
 
 def process(text_):
@@ -153,4 +140,4 @@ def calculate_time(pos_list):
         print(time)
         return time
     else:
-        return "ask/For how much time do you have this problem?"
+        pass

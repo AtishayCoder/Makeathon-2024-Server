@@ -70,9 +70,17 @@ def micro(time, pos_list):
                         # Asthma
                         if h[0].lower() == "chest":
                             for j in pos_list:
-                                if j[0].lower() == "tightness" or "tight" or "pressure" or "ripping" or "rip":
+                                if j[0].lower() == "tightness" or j[0].lower() == "tight" or j[0].lower() == "pressure" or j[0].lower() == "ripping" or j[0].lower() == "rip":
                                     return "result/The diagnosis is Asthma."
+                        # Bronchitis
                         elif h[0].lower() == "breath" or "gasp":
                             for k in pos_list:
-                                if k[0].lower() == "shortness" or "problem" or "difficulty" or "difficult":
+                                if k[0].lower() == "shortness" or k[0].lower() == "problem" or k[0].lower() == "difficulty" or k[0].lower() == "difficult":
                                     return "result/The diagnosis is Bronchitis."
+        # Heart attack
+        elif str(i[0]).lower() == "breath" or str(i[0]).lower() == "gasp":
+            for l in pos_list:
+                if l[0].lower() == "shortness" or l[0].lower() == "problem" or l[0].lower() == "difficulty" or l[0].lower() == "difficult":
+                    for m in pos_list:
+                        if m[0].lower() == "swelling" or m[0].lower() == "swell" or m[0].lower() == "sphere" or m[0].lower() == "circle":
+                            pass
