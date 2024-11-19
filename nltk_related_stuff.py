@@ -16,9 +16,23 @@ ENDPOINT = "https://api.endlessmedical.com/v1/"
 
 def do_stuff(text):
     time, pos_tag_list = process(text)
-    session1 = r.get(f"{ENDPOINT}dx/InitSession")
-    if session1.status_code == 200:
-        session1 = session1.json().SessionID
+
+    # Start API session
+    session_id = r.get(f"{ENDPOINT}dx/InitSession")
+    if session_id.status_code == 200:
+        session_id = session_id.json().SessionID
+        def accept_terms():
+            params = {
+                "SessionID": str(session_id),
+                "passphrase": "I have read, understood and I accept and agree to comply with the Terms of Use of EndlessMedicalAPI and Endless Medical services. The Terms of Use are available on endlessmedical.com"
+            }
+            terms = r.post(f"{ENDPOINT}dx/AcceptTermsOfUse", params=params)
+            if terms.status_code == 200:
+                pass
+            else:
+                accept_terms()
+        accept_terms()
+
 
 
 def process(text_):
