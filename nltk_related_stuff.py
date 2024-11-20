@@ -12,15 +12,17 @@ from requests import session
 # Downloading resources
 nltk.download('words')
 ENDPOINT = "https://api.endlessmedical.com/v1/"
+session_id = None
 
 
 def do_stuff(text):
+    global session_id
     time, pos_tag_list = process(text)
 
     # Start API session
     session_id = r.get(f"{ENDPOINT}dx/InitSession")
     if session_id.status_code == 200:
-        session_id = session_id.json().SessionID
+        session_id = session_id.json()["SessionID"]
         def accept_terms():
             params = {
                 "SessionID": str(session_id),
@@ -32,7 +34,7 @@ def do_stuff(text):
             else:
                 accept_terms()
         accept_terms()
-
+    handle_api()
 
 
 def process(text_):
@@ -155,3 +157,7 @@ def calculate_time(pos_list):
         return time
     else:
         pass
+
+
+def handle_api():
+    possible_symptoms = r.get(f"{ENDPOINT}dx/GetFeatures")
