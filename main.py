@@ -36,3 +36,5 @@ def process_recording():
 
     except Exception as error:
         print(error)
+
+# To host server, use command line command - waitress-serve.exe main.py
