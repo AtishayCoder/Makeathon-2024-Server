@@ -32,11 +32,7 @@ def process_recording():
         translator = Translator()
         text_of_audio = recognizer.recognize_amazon(audio_file)
         text_of_audio = translator.translate(text_of_audio, "en")
-        return nlptk.do_stuff(text_of_audio)
+        return nlptk.initialize_api_session(text_of_audio)
 
     except Exception as error:
         print(error)
-
-
-if __name__ == "__main__":
-    app.run()

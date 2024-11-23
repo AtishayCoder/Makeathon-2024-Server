@@ -15,7 +15,7 @@ ENDPOINT = "https://api.endlessmedical.com/v1/"
 session_id = None
 
 
-def do_stuff(text):
+def initialize_api_session(text):
     global session_id
     time, pos_tag_list = process(text)
 
