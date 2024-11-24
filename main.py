@@ -2,6 +2,8 @@ from speech_recognition import *
 from googletrans import *
 import flask
 import nltk_related_stuff as nlptk
+import wave
+import base64
 
 app = flask.Flask(__name__)
 audio_file = None
@@ -31,8 +33,13 @@ def process_recording():
     global audio_file
     if flask.request.method == "POST":
         audio_file = flask.request.args.get("audio")
-        with open("audios/received_audio.wav", mode="wb") as f:
-            f.write(audio_file)
+        with wave.open("audios/received_audio.wav", mode="wb") as f:
+            f.setnchannels(1)
+            f.setsampwidth(2)
+            f.setframerate(44100)
+            if audio_file is not None or audio_file != "":
+                decoded_string = base64.b64decode(audio_file)
+                f.writeframes(decoded_string)
     try:
         recognizer = Recognizer()
         translator = Translator()
