@@ -1,9 +1,9 @@
 from speech_recognition import *
 from googletrans import *
-from flask import *
+import flask
 import nltk_related_stuff as nlptk
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 audio_file = None
 """
 Plan for two way communication.
@@ -16,28 +16,40 @@ If that is prefix, then the server will display just that and the server will cl
 """
 
 
-@app.route("/", methods=["POST"])
+@app.route("/")
 def main():
+    print("Client connected to server.")
+    return "Client connected."
+
+
+@app.route("/post-recording", methods=["POST"])
+def receive_recording():
     return process_recording()
 
 
 def process_recording():
     global audio_file
-    if request.method == "POST":
-        audio_file = request.data
+    if flask.request.method == "POST":
+        audio_file = flask.request.args.get("audio")
         with open("audios/received_audio.wav", mode="wb") as f:
             f.write(audio_file)
     try:
         recognizer = Recognizer()
         translator = Translator()
         text_of_audio = recognizer.recognize_amazon(audio_file)
+        language = str(translator.detect(text_of_audio))
         text_of_audio = translator.translate(text_of_audio, "en")
-        return nlptk.initialize_api_session(text_of_audio)
+        result = str(nlptk.initialize_api_session(text_of_audio))
+        part_to_be_translated = result.split(sep="/")
+        return f"{part_to_be_translated[0]}/{str(translator.translate(part_to_be_translated[1], language))}"
 
     except Exception as error:
         print(error)
 
-# To host server, use command line command - waitress-serve.exe main.py
+if __name__ == "__main__":
+    app.run(port=5000)
+
+# To host server, use command line command - py main.py
 # To deploy with static address, use the following command.
 # ngrok http --url=glowworm-charmed-jointly.ngrok-free.app <port>
 
