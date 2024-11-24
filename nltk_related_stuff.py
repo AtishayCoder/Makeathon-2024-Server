@@ -67,96 +67,97 @@ def process(text_):
     #         pass  # Placeholder if further processing is needed
 
 
-def calculate_time(pos_list):
-    # Calculate time
-    time = ""
-    index = 0
-    for i in pos_list:
-        if i[1] == "CD":
-            n_index = index + 1
-            after_word = pos_list[n_index][0].lower()
-            match after_word:
-                case "day":
-                    print("In first day loop")
-                    time += f"{i[0]} {list(after_word.lower())[0]}"
-                    break
-                case "days":
-                    print("In second day loop")
-                    time += f"{i[0]} {list(after_word.lower())[0]}"
-                    break
-                case "week":
-                    print("In first week loop")
-                    time += f"{i[0]} {list(after_word.lower())[0]}"
-                    break
-                case "weeks":
-                    print("In second week loop")
-                    time += f"{i[0]} {list(after_word.lower())[0]}"
-                    break
-                case "month":
-                    print("In first month loop")
-                    time += f"{i[0]} {list(after_word.lower())[0]}"
-                    break
-                case "months":
-                    print("In second month loop")
-                    time += f"{i[0]} {list(after_word.lower())[0]}"
-                    break
-                case "year":
-                    print("In first year loop")
-                    time += f"{i[0]} {list(after_word.lower())[0]}"
-                    break
-                case "years":
-                    print("In second year loop")
-                    time += f"{i[0]} {list(after_word.lower())[0]}"
-                    break
-                case _:
-                    print("Didn't match! Going to next loop.")
-                    if pos_list[n_index][1] == "CD":
-                        next_word = pos_list[n_index + 1][0].lower()
-                        match next_word:
-                            case "day":
-                                print("In third day loop")
-                                time += f"{i[0]} {list(next_word.lower())[0]}"
-                                break
-                            case "days":
-                                print("In fourth day loop")
-                                time += f"{i[0]} {list(next_word.lower())[0]}"
-                                break
-                            case "week":
-                                print("In third week loop")
-                                time += f"{i[0]} {list(next_word.lower())[0]}"
-                                break
-                            case "weeks":
-                                print("In fourth week loop")
-                                time += f"{i[0]} {list(next_word.lower())[0]}"
-                                break
-                            case "month":
-                                print("In third month loop")
-                                time += f"{i[0]} {list(next_word.lower())[0]}"
-                                break
-                            case "months":
-                                print("In fourth month loop")
-                                time += f"{i[0]} {list(next_word.lower())[0]}"
-                                break
-                            case "year":
-                                print("In third year loop")
-                                time += f"{i[0]} {list(next_word.lower())[0]}"
-                                break
-                            case "years":
-                                print("In fourth year loop")
-                                time += f"{i[0]} {list(next_word.lower())[0]}"
-                                break
-                            case _:
-                                print("No time given.")
-                                break
-                    break
-
-        index += 1
-    if time is not None:
-        print(time)
-        return time
-    else:
-        pass
+# def calculate_time(pos_list):
+#     # Calculate time
+#     time = ""
+#     index = 0
+#     for i in pos_list:
+#         if i[1] == "CD":
+#             n_index = index + 1
+#             after_word = pos_list[n_index][0].lower()
+#             match after_word:
+#                 case "day":
+#                     print("In first day loop")
+#                     time += f"{i[0]} {list(after_word.lower())[0]}"
+#                     break
+#                 case "days":
+#                     print("In second day loop")
+#                     time += f"{i[0]} {list(after_word.lower())[0]}"
+#                     break
+#                 case "week":
+#                     print("In first week loop")
+#                     time += f"{i[0]} {list(after_word.lower())[0]}"
+#                     break
+#                 case "weeks":
+#                     print("In second week loop")
+#                     time += f"{i[0]} {list(after_word.lower())[0]}"
+#                     break
+#                 case "month":
+#                     print("In first month loop")
+#                     time += f"{i[0]} {list(after_word.lower())[0]}"
+#                     break
+#                 case "months":
+#                     print("In second month loop")
+#                     time += f"{i[0]} {list(after_word.lower())[0]}"
+#                     break
+#                 case "year":
+#                     print("In first year loop")
+#                     time += f"{i[0]} {list(after_word.lower())[0]}"
+#                     break
+#                 case "years":
+#                     print("In second year loop")
+#                     time += f"{i[0]} {list(after_word.lower())[0]}"
+#                     break
+#                 case _:
+#                     print("Didn't match! Going to next loop.")
+#                     if pos_list[n_index][1] == "CD":
+#                         next_word = pos_list[n_index + 1][0].lower()
+#                         match next_word:
+#                             case "day":
+#                                 print("In third day loop")
+#                                 time += f"{i[0]} {list(next_word.lower())[0]}"
+#                                 break
+#                             case "days":
+#                                 print("In fourth day loop")
+#                                 time += f"{i[0]} {list(next_word.lower())[0]}"
+#                                 break
+#                             case "week":
+#                                 print("In third week loop")
+#                                 time += f"{i[0]} {list(next_word.lower())[0]}"
+#                                 break
+#                             case "weeks":
+#                                 print("In fourth week loop")
+#                                 time += f"{i[0]} {list(next_word.lower())[0]}"
+#                                 break
+#                             case "month":
+#                                 print("In third month loop")
+#                                 time += f"{i[0]} {list(next_word.lower())[0]}"
+#                                 break
+#                             case "months":
+#                                 print("In fourth month loop")
+#                                 time += f"{i[0]} {list(next_word.lower())[0]}"
+#                                 break
+#                             case "year":
+#                                 print("In third year loop")
+#                                 time += f"{i[0]} {list(next_word.lower())[0]}"
+#                                 break
+#                             case "years":
+#                                 print("In fourth year loop")
+#                                 time += f"{i[0]} {list(next_word.lower())[0]}"
+#                                 break
+#                             case _:
+#                                 print("No time given.")
+#                                 break
+#                     break
+#
+#         index += 1
+#     if time is not None:
+#         print(time)
+#         return time
+#     else:
+#         pass
 
 
 def handle_api():
     possible_symptoms = r.get(f"{ENDPOINT}dx/GetFeatures")
+

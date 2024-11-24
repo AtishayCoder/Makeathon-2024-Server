@@ -40,3 +40,5 @@ def process_recording():
 # To host server, use command line command - waitress-serve.exe main.py
 # To deploy with static address, use the following command.
 # ngrok http --url=glowworm-charmed-jointly.ngrok-free.app <port>
+
+# Go to glowworm-charmed-jointly.ngrok-free.app to visit server.
