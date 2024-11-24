@@ -7,7 +7,6 @@ from nltk import pos_tag, ne_chunk
 # noinspection PyUnresolvedReferences
 from nltk.chunk import RegexpParser
 import requests as r
-from requests import session
 
 # Downloading resources
 nltk.download('words')
