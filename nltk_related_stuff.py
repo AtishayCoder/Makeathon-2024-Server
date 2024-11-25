@@ -159,5 +159,9 @@ def process(text_):
 
 
 def handle_api():
-    possible_symptoms = r.get(f"{ENDPOINT}dx/GetFeatures")
+    pass
 
+
+def return_tests():
+    tests = r.get(f"{ENDPOINT}dx/GetSuggestedTests", params={"SessionID": session_id, "TopDiseasesToTake": 1})
+    return tests
