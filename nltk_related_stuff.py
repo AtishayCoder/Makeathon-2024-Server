@@ -164,4 +164,4 @@ def handle_api():
 
 def return_tests():
     tests = r.get(f"{ENDPOINT}dx/GetSuggestedTests", params={"SessionID": session_id, "TopDiseasesToTake": 1})
-    return tests
+    return tests.json()["Tests"]

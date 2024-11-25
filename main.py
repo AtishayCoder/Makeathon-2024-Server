@@ -24,9 +24,9 @@ def main():
     return "Client connected."
 
 
-@app.route("/get-tests")
+@app.route("/get-tests", methods=["GET"])
 def tests():
-
+    return nlptk.return_tests()
 
 
 @app.route("/post-recording", methods=["GET"])
@@ -37,7 +37,7 @@ def receive_recording():
 def process_recording():
     global audio_file
     if flask.request.method == "GET":
-        audio_file = flask.request.args.get("audio")
+        audio_file = flask.request.data.decode("utf-8")
         with wave.open("audios/received_audio.wav", mode="wb") as f:
             f.setnchannels(1)
             f.setsampwidth(2)
