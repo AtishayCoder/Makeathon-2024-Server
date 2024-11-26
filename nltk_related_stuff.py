@@ -1,4 +1,5 @@
 import nltk
+from joblib.testing import param
 # noinspection PyUnresolvedReferences
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
@@ -160,12 +161,43 @@ def process(text_):
 
 
 def handle_api(pos_list):
-    pass
+    global reps
+    # Gender
+    if reps == 0:
+        g = 1
+        for i in pos_list:
+            if str(i[0]).lower() == "male" or str(i[0]).lower() == "boy" or str(i[0]).lower() == "guy":
+                g = 2
+            elif str(i[0]).lower() == "female" or str(i[0]).lower() == "girl":
+                g = 3
+        params = {
+            "SessionID": session_id,
+            "name": "Gender",
+            "value": str(g)
+        }
+        response = r.post(f"{ENDPOINT}dx/UpdateFeature", params=params)
+        reps += 1
+        return "ask/What is your age?"
+    # Age
+    elif reps == 1:
+        age = 1
+        for i in pos_list:
+            if str(i[1]) == "CD":
+                age = int(str(i[0]))
+        params = {
+            "SessionID": session_id,
+            "name": "Age",
+            "value": str(age)
+        }
+        response = r.post(f"{ENDPOINT}dx/UpdateFeature", params=params)
+        reps += 1
+        return "ask/What is your age?"
 
 
 def return_tests():
     tests = r.get(f"{ENDPOINT}dx/GetSuggestedTests", params={"SessionID": session_id, "TopDiseasesToTake": 1})
     return tests.json()["Tests"]
+
 
 def reset():
     global session_id, reps
