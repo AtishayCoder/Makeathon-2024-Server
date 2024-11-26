@@ -8,6 +8,7 @@ import base64
 app = flask.Flask(__name__)
 audio_file = None
 supported_langs = ["en", "es", "fr", "de", "ja", "ms", "pt", "it", "sw", "id"]
+
 """
 Plan for two way communication.
 

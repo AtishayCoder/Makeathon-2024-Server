@@ -18,7 +18,6 @@ reps = 0
 def initialize_api_session(text):
     global session_id
     pos_tag_list = process(text)
-
     if reps == 0:
         # Start API session
         session_id = r.get(f"{ENDPOINT}dx/InitSession")
