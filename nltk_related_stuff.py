@@ -12,28 +12,30 @@ import requests as r
 nltk.download('words')
 ENDPOINT = "https://api.endlessmedical.com/v1/"
 session_id = None
+reps = 0
 
 
 def initialize_api_session(text):
     global session_id
-    time, pos_tag_list = process(text)
+    pos_tag_list = process(text)
 
-    # Start API session
-    session_id = r.get(f"{ENDPOINT}dx/InitSession")
-    if session_id.status_code == 200:
-        session_id = session_id.json()["SessionID"]
-        def accept_terms():
-            params = {
-                "SessionID": str(session_id),
-                "passphrase": "I have read, understood and I accept and agree to comply with the Terms of Use of EndlessMedicalAPI and Endless Medical services. The Terms of Use are available on endlessmedical.com"
-            }
-            terms = r.post(f"{ENDPOINT}dx/AcceptTermsOfUse", params=params)
-            if terms.status_code == 200:
-                pass
-            else:
-                accept_terms()
-        accept_terms()
-    handle_api()
+    if reps == 0:
+        # Start API session
+        session_id = r.get(f"{ENDPOINT}dx/InitSession")
+        if session_id.status_code == 200:
+            session_id = session_id.json()["SessionID"]
+            def accept_terms():
+                params = {
+                    "SessionID": str(session_id),
+                    "passphrase": "I have read, understood and I accept and agree to comply with the Terms of Use of EndlessMedicalAPI and Endless Medical services. The Terms of Use are available on endlessmedical.com"
+                }
+                terms = r.post(f"{ENDPOINT}dx/AcceptTermsOfUse", params=params)
+                if terms.status_code == 200:
+                    pass
+                else:
+                    accept_terms()
+            accept_terms()
+    return handle_api(pos_tag_list)
 
 
 def process(text_):
@@ -48,7 +50,7 @@ def process(text_):
     # Part of Speech (POS) Tagging
     pos_tags = pos_tag(filtered_words)
     print("POS Tags:", pos_tags)
-    return calculate_time(pos_tags), pos_tags
+    return pos_tags
 
     # Optional Stuff if needed later
 
@@ -158,10 +160,15 @@ def process(text_):
 #         pass
 
 
-def handle_api():
+def handle_api(pos_list):
     pass
 
 
 def return_tests():
     tests = r.get(f"{ENDPOINT}dx/GetSuggestedTests", params={"SessionID": session_id, "TopDiseasesToTake": 1})
     return tests.json()["Tests"]
+
+def reset():
+    global session_id, reps
+    session_id = None
+    reps = 0

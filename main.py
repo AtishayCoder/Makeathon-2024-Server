@@ -7,6 +7,7 @@ import base64
 
 app = flask.Flask(__name__)
 audio_file = None
+supported_langs = ["en", "es", "fr", "de", "ja", "ms", "pt", "it", "sw", "id"]
 """
 Plan for two way communication.
 
@@ -34,6 +35,16 @@ def receive_recording():
     return process_recording()
 
 
+@app.route("/reset", methods=["POST"])
+def reset():
+    print("Initiating reset.")
+    with open("audios/received_audio.wav", mode="w") as f:
+        f.write("")
+    nlptk.reset()
+    print("Reset is complete.")
+    return "{'status': 'reset complete'}"
+
+
 def process_recording():
     global audio_file
     if flask.request.method == "GET":
@@ -53,7 +64,10 @@ def process_recording():
         text_of_audio = translator.translate(text_of_audio, "en")
         result = str(nlptk.initialize_api_session(text_of_audio))
         part_to_be_translated = result.split(sep="/")
-        return f"{part_to_be_translated[0]}/{str(translator.translate(part_to_be_translated[1], language))}"
+        for lang in supported_langs:
+            if lang == language:
+                return f"{part_to_be_translated[0]}/{str(translator.translate(part_to_be_translated[1], language))}"
+        return f"{part_to_be_translated[0]}/{part_to_be_translated[1]}"
 
     except Exception as error:
         print(error)
@@ -63,6 +77,6 @@ if __name__ == "__main__":
 
 # To host server, use command line command - py main.py
 # To deploy with static address, use the following command.
-# ngrok http --url=glowworm-charmed-jointly.ngrok-free.app <port>
+# ngrok http --url=glowworm-charmed-jointly.ngrok-free.app 5000
 
 # Go to glowworm-charmed-jointly.ngrok-free.app to visit server.
