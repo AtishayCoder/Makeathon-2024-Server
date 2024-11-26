@@ -11,9 +11,10 @@ import requests as r
 
 # Downloading resources
 nltk.download('words')
-ENDPOINT = "https://api.endlessmedical.com/v1/"
+ENDPOINT = "https://api.endlessmedical.com/v1/dx"
 session_id = None
 reps = 0
+last_q = ""
 
 
 def initialize_api_session(text):
@@ -21,7 +22,7 @@ def initialize_api_session(text):
     pos_tag_list = process(text)
     if reps == 0:
         # Start API session
-        session_id = r.get(f"{ENDPOINT}dx/InitSession")
+        session_id = r.get(f"{ENDPOINT}/InitSession")
         if session_id.status_code == 200:
             session_id = session_id.json()["SessionID"]
             def accept_terms():
@@ -29,7 +30,7 @@ def initialize_api_session(text):
                     "SessionID": str(session_id),
                     "passphrase": "I have read, understood and I accept and agree to comply with the Terms of Use of EndlessMedicalAPI and Endless Medical services. The Terms of Use are available on endlessmedical.com"
                 }
-                terms = r.post(f"{ENDPOINT}dx/AcceptTermsOfUse", params=params)
+                terms = r.post(f"{ENDPOINT}/AcceptTermsOfUse", params=params)
                 if terms.status_code == 200:
                     pass
                 else:
@@ -161,7 +162,7 @@ def process(text_):
 
 
 def handle_api(pos_list):
-    global reps
+    global reps, last_q
     # Gender
     if reps == 0:
         g = 1
@@ -175,7 +176,7 @@ def handle_api(pos_list):
             "name": "Gender",
             "value": str(g)
         }
-        response = r.post(f"{ENDPOINT}dx/UpdateFeature", params=params)
+        response = r.post(f"{ENDPOINT}/UpdateFeature", params=params)
         reps += 1
         return "ask/What is your age?"
     # Age
@@ -189,14 +190,106 @@ def handle_api(pos_list):
             "name": "Age",
             "value": str(age)
         }
-        response = r.post(f"{ENDPOINT}dx/UpdateFeature", params=params)
+        response = r.post(f"{ENDPOINT}/UpdateFeature", params=params)
         reps += 1
-        return "ask/What is your age?"
+        last_q = "fever"
+        return "ask/Do you have any fever?"
+    # Get Main Symptom
+    elif reps == 2:
+        params = dict(SessionID=session_id, name="", value="")
+        if last_q == "fever":
+            for i in pos_list:
+                if str(i[0]).lower() == "yes" or str(i[0]).lower() == "present" or str(i[0]).lower() == "mild" or str(i[0]).lower() == "moderate" or str(i[0]).lower() == "high" or str(i[0]).lower() == "severe":
+                    params["name"] = "HistoryFever"
+                    params["value"] = str(3)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "cough"
+                    return "ask/Do you have any cough?"
+                else:
+                    params["name"] = "HistoryFever"
+                    params["value"] = str(2)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "cough"
+                    return "ask/Do you have any cough?"
+        elif last_q == "cough":
+            for i in pos_list:
+                if str(i[0]).lower() == "yes" or str(i[0]).lower() == "present" or str(i[0]).lower() == "mild" or str(i[0]).lower() == "moderate" or str(i[0]).lower() == "bit" or str(i[0]).lower() == "severe" or str(i[0]).lower() == "excessive" or str(i[0]).lower() == "excess":
+                    params["name"] = "SeverityCough"
+                    params["value"] = str(4)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "sore throat"
+                    return "ask/Do you have a sore throat?"
+                else:
+                    params["name"] = "SeverityCough"
+                    params["value"] = str(2)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "sore throat"
+                    return "ask/Do you have a sore throat?"
+        elif last_q == "sore throat":
+            for i in pos_list:
+                if str(i[0]).lower() == "yes" or str(i[0]).lower() == "present" or str(i[0]).lower() == "bit":
+                    params["name"] = "SoreThroat"
+                    params["value"] = str(4)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "runny nose"
+                    return "ask/Do you have a runny nose?"
+                else:
+                    params["name"] = "SoreThroat"
+                    params["value"] = str(2)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "runny nose"
+                    return "ask/Do you have a runny nose?"
+        elif last_q == "runny nose":
+            for i in pos_list:
+                if str(i[0]).lower() == "yes" or str(i[0]).lower() == "present":
+                    params["name"] = "RunnyNoseCongestion"
+                    params["value"] = str(3)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "fatigue"
+                    return "ask/Do you experience fatigue?"
+                else:
+                    params["name"] = "RunnyNoseCongestion"
+                    params["value"] = str(2)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "fatigue"
+                    return "ask/Do you experience fatigue?"
+        elif last_q == "fatigue":
+            for i in pos_list:
+                if str(i[0]).lower() == "yes" or str(i[0]).lower() == "present" or str(i[0]).lower() == "severe" or str(i[0]).lower() == "mild" or str(i[0]).lower() == "moderate":
+                    params["name"] = "GeneralizedFatigue"
+                    params["value"] = str(3)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "headache"
+                    return "ask/Do you experience headache?"
+                else:
+                    params["name"] = "RunnyNoseCongestion"
+                    params["value"] = str(2)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    last_q = "headache"
+                    return "ask/Do you experience headache?"
+        elif last_q == "headache":
+            for i in pos_list:
+                if str(i[0]).lower() == "yes" or str(i[0]).lower() == "present" or str(i[0]).lower() == "severe" or str(i[0]).lower() == "mild" or str(i[0]).lower() == "moderate":
+                    params["name"] = "HeadacheOther"
+                    params["value"] = str(3)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    reps += 1
+                    return ask_api_recommended_questions()
+                else:
+                    params["name"] = "HeadacheOther"
+                    params["value"] = str(2)
+                    r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+                    reps += 1
+                    return ask_api_recommended_questions()
 
 
 def return_tests():
-    tests = r.get(f"{ENDPOINT}dx/GetSuggestedTests", params={"SessionID": session_id, "TopDiseasesToTake": 1})
+    tests = r.get(f"{ENDPOINT}/GetSuggestedTests", params={"SessionID": session_id, "TopDiseasesToTake": 1})
     return tests.json()["Tests"]
+
+
+def ask_api_recommended_questions():
+    pass
 
 
 def reset():
