@@ -281,10 +281,20 @@ def handle_api(pos_list):
                     r.post(f"{ENDPOINT}/UpdateFeature", params=params)
                     reps += 1
                     return ask_api_recommended_questions()
+    # Diagnose
+    elif reps == 9:
+        params = {
+            "SessionID": session_id,
+            "NumberOfResults": 1
+        }
+        diagnosis = r.get(f"{ENDPOINT}/Analyze", params=params)
+        diagnosis = list(diagnosis.json()["Diseases"][0].keys())[0]
+        return f"result/The diagnosis is {diagnosis}"
+
 
 
 def return_tests():
-    tests = r.get(f"{ENDPOINT}/GetSuggestedTests", params={"SessionID": session_id, "TopDiseasesToTake": 1})
+    tests = r.get(f"{ENDPOINT}/GetSuggestedFeatures_Tests", params={"SessionID": session_id, "TopDiseasesToTake": 2})
     return tests.json()["Tests"]
 
 
