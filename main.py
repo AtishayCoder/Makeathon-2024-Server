@@ -28,11 +28,13 @@ def main():
 
 @app.route("/get-tests", methods=["GET"])
 def tests():
+    print("Tests requested.")
     return nlptk.return_tests()
 
 
 @app.route("/post-recording", methods=["GET"])
 def receive_recording():
+    print("Recording received.")
     return process_recording()
 
 
