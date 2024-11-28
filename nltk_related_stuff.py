@@ -1,5 +1,4 @@
 import nltk
-from joblib.testing import param
 # noinspection PyUnresolvedReferences
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
@@ -15,6 +14,8 @@ ENDPOINT = "https://api.endlessmedical.com/v1/dx"
 session_id = None
 reps = 0
 last_q = ""
+list_of_api_ques = []
+last_i = [0, "U"]
 
 
 def initialize_api_session(text):
@@ -274,13 +275,13 @@ def handle_api(pos_list):
                     params["value"] = str(3)
                     r.post(f"{ENDPOINT}/UpdateFeature", params=params)
                     reps += 1
-                    return ask_api_recommended_questions()
+                    return ask_api_recommended_questions(pos_list)
                 else:
                     params["name"] = "HeadacheOther"
                     params["value"] = str(2)
                     r.post(f"{ENDPOINT}/UpdateFeature", params=params)
                     reps += 1
-                    return ask_api_recommended_questions()
+                    return ask_api_recommended_questions(pos_list)
     # Diagnose
     elif reps == 9:
         params = {
@@ -298,9 +299,35 @@ def return_tests():
     return tests.json()["Tests"]
 
 
-def ask_api_recommended_questions():
-    pass
-
+# noinspection PyUnboundLocalVariable
+def ask_api_recommended_questions(pos_list):
+    global list_of_api_ques
+    if 3 <= reps < 9:
+        params = {
+            "SessionID": session_id,
+            "TopDiseasesToTake": 6,
+        }
+        list_of_api_ques = r.get(f"{ENDPOINT}/GetSuggestedFeatures_PatientProvided", params=params).json()["SuggestedFeatures"]
+        if last_i[1] == "U":
+            last_i[1] = "A"
+            return f"ask/{list_of_api_ques[last_i[0]][1]}"
+        elif last_i[1] == "A":
+            feature_to_add = str(list_of_api_ques[last_i[0]][0])
+            params = {
+                "SessionID": session_id,
+                "name": feature_to_add,
+                "value": str(2)
+            }
+            for i in pos_list:
+                if i[0].lower() == "yes" or i[0].lower() == "present":
+                    params["value"] = str(3)
+                elif i[0].lower() == "no" or i[0].lower() == "not":
+                    params["value"] = str(2)
+                r.post(f"{ENDPOINT}/UpdateFeature", params=params)
+            last_i[0] += 1
+            last_i[1] = "U"
+            reps += 1
+            ask_api_recommended_questions(pos_list=pos_list)
 
 def reset():
     global session_id, reps
