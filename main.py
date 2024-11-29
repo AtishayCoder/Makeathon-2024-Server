@@ -38,6 +38,11 @@ def receive_recording():
     return process_recording()
 
 
+@app.route("/get-specialist", methods=["GET"])
+def get_specialist():
+    return nlptk.specialist()
+
+
 @app.route("/reset", methods=["POST"])
 def reset():
     print("Initiating reset.")

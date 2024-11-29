@@ -330,6 +330,11 @@ def ask_api_recommended_questions(pos_list):
             ask_api_recommended_questions(None)
 
 
+def specialist():
+    specialist_name = r.get(f"{ENDPOINT}/GetSuggestedSpecializations", params={"SessionID": session_id, "NumberOfResults": 1}).json()["SuggestedSpecializations"][0]
+    return specialist_name
+
+
 def reset():
     global session_id, reps
     session_id = None
