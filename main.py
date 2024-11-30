@@ -1,4 +1,4 @@
-from speech_recognition import *
+from openai import OpenAI
 from googletrans import *
 import flask
 import nltk_related_stuff as nlptk
@@ -65,11 +65,14 @@ def process_recording():
                 decoded_string = base64.b64decode(audio_file)
                 f.writeframes(decoded_string)
     try:
-        recognizer = Recognizer()
+        client = OpenAI()
         translator = Translator()
-        text_of_audio = recognizer.recognize_amazon(audio_file)
+        audio_file = open("audios/received_audio.wav", mode="rb")
+        text_of_audio = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file
+        )
         language = str(translator.detect(text_of_audio))
-        text_of_audio = translator.translate(text_of_audio, "en")
         result = str(nlptk.initialize_api_session(text_of_audio))
         part_to_be_translated = result.split(sep="/")
         for lang in supported_langs:
