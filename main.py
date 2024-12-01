@@ -2,6 +2,8 @@ from openai import OpenAI
 from googletrans import *
 import flask
 import nltk_related_stuff as nlptk
+import speech_recognition as sr
+import langdetect as detect
 import wave
 import base64
 
@@ -72,7 +74,7 @@ def process_recording():
             model="whisper-1",
             file=audio_file
         )
-        language = str(translator.detect(text_of_audio))
+        language = str(detect_language())
         result = str(nlptk.initialize_api_session(text_of_audio))
         part_to_be_translated = result.split(sep="/")
         for lang in supported_langs:
@@ -82,6 +84,14 @@ def process_recording():
 
     except Exception as error:
         print(error)
+
+
+def detect_language():
+    recognizer = sr.Recognizer()
+    audio = sr.AudioFile("audios/received_audio.wav")
+    audio = recognizer.record(audio)
+    text = recognizer.recognize_amazon(audio)
+    return detect.detect(str(text))
 
 
 if __name__ == "__main__":
