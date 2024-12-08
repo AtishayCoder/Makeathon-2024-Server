@@ -5,6 +5,8 @@ import nltk_related_stuff as nlptk
 import speech_recognition as sr
 import langdetect as detect
 import wave
+import noisereduce
+from scipy.io import wavfile
 import base64
 
 app = flask.Flask(__name__)
@@ -45,7 +47,7 @@ def get_specialist():
     return nlptk.specialist()
 
 
-@app.route("/reset", methods=["POST"])
+@app.route("/reset", methods=["GET"])
 def reset():
     print("Initiating reset.")
     with open("audios/received_audio.wav", mode="w") as f:
@@ -67,6 +69,7 @@ def process_recording():
                 decoded_string = base64.b64decode(audio_file)
                 f.writeframes(decoded_string)
     try:
+        remove_background_noise()
         client = OpenAI()
         translator = Translator()
         audio_file = open("audios/received_audio.wav", mode="rb")
@@ -94,11 +97,17 @@ def detect_language():
     return detect.detect(str(text))
 
 
+def remove_background_noise():
+    rate, data = wavfile.read("audios/received_audio.wav")
+    background_noise_free_audio = noisereduce.reduce_noise(y=data, sr=rate)
+    wavfile.write(rate=rate, filename="audios/received_audio.wav", data=background_noise_free_audio)
+
+
 if __name__ == "__main__":
     app.run(port=5000)
 
 # To host server, use command line command - py main.py
 # To deploy with static address, use the following command.
-# ngrok http --url=glowworm-charmed-jointly.ngrok-free.app 5000
+# ngrok http --url=glowworm-charmed-jointly.ngrok-free.app --host-header=rewrite 5000
 
 # Go to glowworm-charmed-jointly.ngrok-free.app to visit server.
