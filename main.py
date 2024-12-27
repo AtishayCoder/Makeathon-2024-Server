@@ -27,6 +27,7 @@ If that is prefix, then the server will display just that and the server will cl
 @app.route("/")
 def main():
     print("Client connected to server.")
+    result = reset()
     return "Client connected."
 
 
@@ -83,6 +84,7 @@ def process_recording():
         for lang in supported_langs:
             if lang == language:
                 return f"{part_to_be_translated[0]}/{str(translator.translate(part_to_be_translated[1], language))}"
+        audio_file.close()
         return f"{part_to_be_translated[0]}/{part_to_be_translated[1]}"
 
     except Exception as error:
